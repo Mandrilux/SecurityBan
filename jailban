@@ -1,2 +1,25 @@
 #!/usr/bin/env python3
 # -*- coding: latin-1 -*-
+
+def detectFlag(s, key):
+    if s.find(key) == -1:
+        return 0
+    else:
+        return 1
+
+if __name__ == '__main__':
+    print ("Security Project")
+    ssh_log = "/var/log/auth.log"
+    try:
+        fd_ssh = open(ssh_log,"r")
+    except IOError:
+        print ("Could not open file! please verify file configuration")
+        exit (0)
+    print ("[%s]" % ssh_log)
+    while True:
+        line = fd_ssh.readline()
+        if not line:
+            break
+        value = detectFlag(line, "Failed")
+        if value == 1:
+            print (line)
