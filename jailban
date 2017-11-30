@@ -3,23 +3,32 @@
 
 import os
 
-
-
 class Jail:
-    def __init__(self, name):
+    def __init__(self, name, files):
          self.name = name
          self.files = []
-         self.size = []
-         self.new_size = []
+         self.sizes = []
+         self.new_sizes = []
          self.fd = []
 
-        
+    def openFiles(self):
+        for i in range(0, len(self.files)):
+            try:
+                fd_ssh = open(files[i],"r")
+                self.fd.push(fd_ssh)
+            except IOError:
+                print ("Could not open file! please verify file configuration")
+                self.fd.push(None)
+
+    def getSize(self):
+
+
 def detectFlag(s, key):
     if s.find(key) == -1:
         return 0
     else:
         return 1
-    
+
 def openFile(file):
     try:
         fd_ssh = open(file,"r")
@@ -32,7 +41,7 @@ def ClearTab(lines):
     for i in range(0, len(lines)):
         lines[i] = lines[i].rstrip()
     return (lines)
-        
+
 if __name__ == '__main__':
     print ("Security Project")
     ssh_log = "/var/log/auth.log"
