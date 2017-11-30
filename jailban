@@ -3,6 +3,17 @@
 
 import os
 
+
+
+class Jail:
+    def __init__(self, name):
+         self.name = name
+         self.files = []
+         self.size = []
+         self.new_size = []
+         self.fd = []
+
+        
 def detectFlag(s, key):
     if s.find(key) == -1:
         return 0
