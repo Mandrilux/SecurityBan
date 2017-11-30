@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: latin-1 -*-
 
+import os
+
 def detectFlag(s, key):
     if s.find(key) == -1:
         return 0
@@ -16,10 +18,21 @@ if __name__ == '__main__':
         print ("Could not open file! please verify file configuration")
         exit (0)
     print ("[%s]" % ssh_log)
+    size = os.stat(ssh_log).st_size
+    print (size)
     while True:
-        line = fd_ssh.readline()
-        if not line:
-            break
-        value = detectFlag(line, "Failed")
-        if value == 1:
-            print (line)
+        diff_size = os.stat(ssh_log).st_size
+        if diff_size != size:
+            print ("fichier modifier")
+            size = diff_size
+
+
+
+
+        
+        #line = fd_ssh.readline()
+        #if not line:
+            #break
+        #value = detectFlag(line, "Failed")
+        #if value == 1:
+        #print (line)
