@@ -8,23 +8,25 @@ def detectFlag(s, key):
         return 0
     else:
         return 1
+def openFile(file):
+    try:
+        fd_ssh = open(file,"r")
+        return 1;
+    except IOError:
+        print ("Could not open file! please verify file configuration")
+        return 0;
 
 if __name__ == '__main__':
     print ("Security Project")
     ssh_log = "/var/log/auth.log"
-    try:
-        fd_ssh = open(ssh_log,"r")
-    except IOError:
-        print ("Could not open file! please verify file configuration")
-        exit (0)
     print ("[%s]" % ssh_log)
     size = os.stat(ssh_log).st_size
     print (size)
     while True:
-        diff_size = os.stat(ssh_log).st_size
-        if diff_size != size:
+        new_size = os.stat(ssh_log).st_size
+        if new_size != size:
             print ("fichier modifier")
-            size = diff_size
+            size = new_sie
 
 
 
