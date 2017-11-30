@@ -27,7 +27,7 @@ if __name__ == '__main__':
     ssh_log = "/var/log/auth.log"
     print ("[%s]" % ssh_log)
     size = os.stat(ssh_log).st_size
-    print (size)
+    #print (size)
     while True:
         new_size = os.stat(ssh_log).st_size
         if new_size != size:
@@ -35,10 +35,8 @@ if __name__ == '__main__':
             fd = openFile(ssh_log)
             if fd is not None:
                 print ("le fichier est ouvert")
-                print (size)
+                #print (size)
                 fd.seek(size, 0)
-                lines = fd.readlines()
-                lines = ClearTab(lines)
-                #line = line.rstrip("\n")              
+                lines = ClearTab(fd.readlines())
                 print (lines)
             size = new_size
