@@ -17,6 +17,11 @@ def openFile(file):
         print ("Could not open file! please verify file configuration")
         return None;
 
+def ClearTab(lines):
+    for i in range(0, len(lines)):
+        lines[i] = lines[i].rstrip()
+    return (lines)
+        
 if __name__ == '__main__':
     print ("Security Project")
     ssh_log = "/var/log/auth.log"
@@ -27,6 +32,13 @@ if __name__ == '__main__':
         new_size = os.stat(ssh_log).st_size
         if new_size != size:
             print ("fichier modifier")
-            size = new_size
-            if openFile(ssh_log) is not None:
+            fd = openFile(ssh_log)
+            if fd is not None:
                 print ("le fichier est ouvert")
+                print (size)
+                fd.seek(size, 0)
+                lines = fd.readlines()
+                lines = ClearTab(lines)
+                #line = line.rstrip("\n")              
+                print (lines)
+            size = new_size
