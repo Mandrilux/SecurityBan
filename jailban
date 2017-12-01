@@ -21,6 +21,8 @@ class Jail:
                 self.fd.push(None)
 
     def getSize(self):
+        for i in range(0, len(self.files)):
+            self.sizes[i] = os.stat(self.files[i]).st_size
 
 
 def detectFlag(s, key):
