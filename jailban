@@ -7,18 +7,18 @@ class Jail:
     def __init__(self, name, files):
          self.name = name
          self.files = []
-         self.sizes = []
-         self.new_sizes = []
-         self.fd = []
+         self.sizes = [None] * len(files)
+         self.new_sizes = [None] * len(files)
+         self.fd = [None] * len(files)
 
     def openFiles(self):
         for i in range(0, len(self.files)):
             try:
                 fd_ssh = open(files[i],"r")
-                self.fd.push(fd_ssh)
+                self.fd[i] = fd_ssh
             except IOError:
                 print ("Could not open file! please verify file configuration")
-                self.fd.push(None)
+                self.fd[i] = None
 
     def getSize(self):
         for i in range(0, len(self.files)):
@@ -45,11 +45,10 @@ def ClearTab(lines):
     return (lines)
 
 if __name__ == '__main__':
-    print ("Security Project")
+    print ("Jail Security ban")
     ssh_log = "/var/log/auth.log"
     print ("[%s]" % ssh_log)
     size = os.stat(ssh_log).st_size
-    #print (size)
     while True:
         new_size = os.stat(ssh_log).st_size
         if new_size != size:
