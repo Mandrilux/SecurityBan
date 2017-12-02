@@ -12,7 +12,7 @@ class Jail:
          self.sizes = [None] * len(files)
          self.new_sizes = [None] * len(files)
          self.fd = [None] * len(files)
-         self.Security = Security()
+         self.security = Security()
          self.initSize()
 
 
@@ -60,7 +60,8 @@ class Jail:
                 if self.fd[i] is not None:
                     self.fd[i].seek(self.sizes[i], 0)
                     lines = self.ClearTab(self.fd[i].readlines())
-                    print (lines)
+                    self.security.controlLines(lines)
+                    #print (lines)
                 self.sizes[i] = self.new_sizes[i]
 
     """Fonction qui permet de supprimer le retour à la ligne
