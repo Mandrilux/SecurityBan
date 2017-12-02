@@ -4,30 +4,85 @@
 import os
 
 class Jail:
+
+
     def __init__(self, name, files):
          self.name = name
          self.files = files
          self.sizes = [None] * len(files)
          self.new_sizes = [None] * len(files)
          self.fd = [None] * len(files)
-         #print (self.files)
-         #print (self.sizes)
-         #print (self.new_sizes)
-         #print (self.fd)
-         
-    def openFiles(self):
-        for i in range(0, len(self.files)):
-            try:
-                fd_ssh = open(files[i],"r")
-                self.fd[i] = fd_ssh
-            except IOError:
-                print ("Could not open file! please verify file configuration")
-                self.fd[i] = None
+         self.initSize()
+
+
+    """ Cette fonction initialise les fichiers pour initié
+    la valeur "size" de chaque fichier. """
+
 
     def initSize(self):
         for i in range(0, len(self.files)):
-            self.sizes[i] = os.stat(self.files[i]).st_size
+            try:
+                self.sizes[i] = os.stat(self.files[i]).st_size
+            except IOError:
+                print ("Could get size for ['%s'] ! please verify file configuration" % self.files[i])
+                self.sizes[i] = None
 
+
+    """ Fonction qui update la taille des fichiers de la classe
+    Cela permet par la suite de detecter une modification du
+    fichier """
+
+
+
+    def newSize(self):
+        for i in range(0, len(self.files)):
+            if self.sizes[i] is not None:
+                try:
+                    self.new_sizes[i] = os.stat(self.files[i]).st_size
+                except IOError:
+                    print ("Could get size for %s ! please verify file configuration" % self.files[i])
+                    self.new_sizes[i] = 0
+
+
+    """ Fonction qui verifie en runtime l'intégralité des fichiers logs
+    de la classe , Si un fichier est modifier , on extrait les lignes
+    pour traitement et on analyse ces nouvelles lignes. Sinon cette
+    fonction ne fait rien """
+
+
+    def CheckModify(self):
+        self.newSize()
+        for i in range(0, len(self.files)):
+            if self.new_sizes[i] != self.sizes[i]:
+                print ("fichier modifier")
+                self.fd[i] = self.openFile(self.files[i])
+                if self.fd[i] is not None:
+                    self.fd[i].seek(self.sizes[i], 0)
+                    lines = self.ClearTab(self.fd[i].readlines())
+                    print (lines)
+                self.sizes[i] = self.new_sizes[i]
+
+    """Fonction qui permet de supprimer le retour à la ligne
+    de toute les lignes lu dans le fichier de log """
+
+
+    def ClearTab(self, lines):
+        for i in range(0, len(lines)):
+            lines[i] = lines[i].rstrip()
+        return (lines)
+
+
+    """ Fonction qui retourne un file descriptor si l'ouverture du fichier
+    passé en parametre à réussi, sinon retourne 'None' (équivalent à NULL) """
+
+
+    def openFile(self, file):
+        try:
+            fd_ssh = open(file,"r")
+            return fd_ssh;
+        except IOError:
+            print ("Could not open file! please verify file configuration")
+            return None;
 
 def detectFlag(s, key):
     if s.find(key) == -1:
@@ -35,34 +90,9 @@ def detectFlag(s, key):
     else:
         return 1
 
-def openFile(file):
-    try:
-        fd_ssh = open(file,"r")
-        return fd_ssh;
-    except IOError:
-        print ("Could not open file! please verify file configuration")
-        return None;
-
-def ClearTab(lines):
-    for i in range(0, len(lines)):
-        lines[i] = lines[i].rstrip()
-    return (lines)
-
 if __name__ == '__main__':
     print ("Jail Security ban")
     ssh_log = "/var/log/auth.log"
-    print ("[%s]" % ssh_log)
     sshJail = Jail("ssh", [ssh_log, "toto"])
-    size = os.stat(ssh_log).st_size
-    #while True:
-        #new_size = os.stat(ssh_log).st_size
-        #if new_size != size:
-            #print ("fichier modifier")
-            #fd = openFile(ssh_log)
-            #if fd is not None:
-                #print ("le fichier est ouvert")
-                #print (size)
-                #fd.seek(size, 0)
-                #lines = ClearTab(fd.readlines())
-                #print (lines)
-            #size = new_size
+    while True:
+        sshJail.CheckModify()
