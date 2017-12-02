@@ -6,11 +6,15 @@ import os
 class Jail:
     def __init__(self, name, files):
          self.name = name
-         self.files = []
+         self.files = files
          self.sizes = [None] * len(files)
          self.new_sizes = [None] * len(files)
          self.fd = [None] * len(files)
-
+         #print (self.files)
+         #print (self.sizes)
+         #print (self.new_sizes)
+         #print (self.fd)
+         
     def openFiles(self):
         for i in range(0, len(self.files)):
             try:
@@ -20,7 +24,7 @@ class Jail:
                 print ("Could not open file! please verify file configuration")
                 self.fd[i] = None
 
-    def getSize(self):
+    def initSize(self):
         for i in range(0, len(self.files)):
             self.sizes[i] = os.stat(self.files[i]).st_size
 
@@ -48,16 +52,17 @@ if __name__ == '__main__':
     print ("Jail Security ban")
     ssh_log = "/var/log/auth.log"
     print ("[%s]" % ssh_log)
+    sshJail = Jail("ssh", [ssh_log, "toto"])
     size = os.stat(ssh_log).st_size
-    while True:
-        new_size = os.stat(ssh_log).st_size
-        if new_size != size:
-            print ("fichier modifier")
-            fd = openFile(ssh_log)
-            if fd is not None:
-                print ("le fichier est ouvert")
+    #while True:
+        #new_size = os.stat(ssh_log).st_size
+        #if new_size != size:
+            #print ("fichier modifier")
+            #fd = openFile(ssh_log)
+            #if fd is not None:
+                #print ("le fichier est ouvert")
                 #print (size)
-                fd.seek(size, 0)
-                lines = ClearTab(fd.readlines())
-                print (lines)
-            size = new_size
+                #fd.seek(size, 0)
+                #lines = ClearTab(fd.readlines())
+                #print (lines)
+            #size = new_size
