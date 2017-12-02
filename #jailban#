@@ -2,21 +2,21 @@
 # -*- coding: latin-1 -*-
 
 import os
-from security import Security
+i
 class Jail:
 
 
-    def __init__(self, name, files):
+    def __init__(self, name, files, ban):
          self.name = name
          self.files = files
          self.sizes = [None] * len(files)
          self.new_sizes = [None] * len(files)
          self.fd = [None] * len(files)
-         self.Security = Security()
+         self.ban = ban
          self.initSize()
 
 
-    """ Cette fonction initialise les fichiers pour initié
+    """ Cette fonction initialise les fichiers pour initiÃ©
     la valeur "size" de chaque fichier. """
 
 
@@ -45,7 +45,7 @@ class Jail:
                     self.new_sizes[i] = 0
 
 
-    """ Fonction qui verifie en runtime l'intégralité des fichiers logs
+    """ Fonction qui verifie en runtime l'intÃ©gralitÃ© des fichiers logs
     de la classe , Si un fichier est modifier , on extrait les lignes
     pour traitement et on analyse ces nouvelles lignes. Sinon cette
     fonction ne fait rien """
@@ -63,7 +63,7 @@ class Jail:
                     print (lines)
                 self.sizes[i] = self.new_sizes[i]
 
-    """Fonction qui permet de supprimer le retour à la ligne
+    """Fonction qui permet de supprimer le retour Ã  la ligne
     de toute les lignes lu dans le fichier de log """
 
 
@@ -74,7 +74,7 @@ class Jail:
 
 
     """ Fonction qui retourne un file descriptor si l'ouverture du fichier
-    passé en parametre à réussi, sinon retourne 'None' (équivalent à NULL) """
+    passÃ© en parametre Ã  rÃ©ussi, sinon retourne 'None' (Ã©quivalent Ã  NULL) """
 
 
     def openFile(self, file):
@@ -85,10 +85,16 @@ class Jail:
             print ("Could not open file! please verify file configuration")
             return None;
 
+def detectFlag(s, key):
+    if s.find(key) == -1:
+        return 0
+    else:
+        return 1
 
 if __name__ == '__main__':
     print ("Jail Security ban")
     ssh_log = "/var/log/auth.log"
-    sshJail = Jail("ssh", [ssh_log, "toto"])
+    ban = Ban()
+    sshJail = Jail("ssh", [ssh_log, "toto"], ban)
     while True:
         sshJail.CheckModify()
