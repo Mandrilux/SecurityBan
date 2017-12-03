@@ -3,9 +3,9 @@
 
 class Security:
     def __init__(self):
-        self._ips = []
-        self._flags = ["Failed", "Invalid", "error", "not", "failure"]
-        self._lines = []
+        _ips = []
+        _flags = ["Failed", "Invalid", "error", "not"]
+        _lines = []
 
     def extractIp(self, line):
         return True
@@ -24,7 +24,7 @@ class Security:
 
 
     """ Cette fonction permet d'effectuer un controle sur
-    les nouvelles lignes trouvées dans un fichier de log """
+    les nouvelles lignes trouvÃ©es dans un fichier de log """
 
 
     def controlLines(self, lines):
@@ -33,23 +33,14 @@ class Security:
             print(self._lines[i])
             for z in range(0, len(self._flags)):
                 if self.detectFlag(self._lines[i], self._flags[z]) == 1:
-                    print ("extraction ip")
                     self.extractIp(lines[i])
 
 
-    """ Setter / getter """
+    """ Setter / getter  pour 'lines' """
 
     def setLines(self, lines):
         self._lines = lines
 
     @property
-    def lines(self):
+    def getLines(self):
         return self._lines
-
-    @lines.setter
-    def lines(self, value):
-        self._lines = value
-
-    @property
-    def flags(self):
-        return self._flags
